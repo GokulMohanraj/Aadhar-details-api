@@ -1,4 +1,4 @@
-const { sequelize, user } = require('./models')
+const { sequelize, users } = require('./models')
 const express = require('express')
 const users = require('./models/users')
 const app = express()
