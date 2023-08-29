@@ -13,17 +13,21 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
       },
-      full_name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      country_code: {
-        type: DataTypes.INTEGER,
+      mobile: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+      },
+      email:{
+        type: DataTypes.STRING,
         allowNull: false
       },
       aadhar_id: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
