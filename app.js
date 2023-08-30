@@ -1,6 +1,5 @@
-const { sequelize, users } = require('./models')
+const { sequelize, users, aadhardetails} = require('./models')
 const express = require('express')
-const users = require('./models/users')
 const app = express()
 app.use(express.json())
 
@@ -33,11 +32,11 @@ app.get('/users', async(req, res) =>{
 
 // GET single user
 
-app.get('/users/:uuid', async(req, res) =>{
-    const uuid = req.params.uuid
+app.get('/users/:id', async(req, res) =>{
+    const id = req.params.id
     try {
         const user = await users.findOne({
-            where: {uuid}
+            where: {id}
         })
 
         return res.json(user)
@@ -49,11 +48,11 @@ app.get('/users/:uuid', async(req, res) =>{
 
 // DELETE user
 
-app.delete('/users/:uuid', async(req, res) =>{
-    const uuid = req.params.uuid
+app.delete('/users/:id', async(req, res) =>{
+    const id = req.params.id
     try {
         const user = await users.findOne({
-            where: {uuid}
+            where: {id}
         })
         await user.destroy()
         return res.json({message:'User deleted successfully!'})
@@ -65,12 +64,12 @@ app.delete('/users/:uuid', async(req, res) =>{
  
 // Update the existing user
 
-app.put('/users/:uuid', async(req, res) =>{
-    const uuid = req.params.uuid
+app.put('/users/:id', async(req, res) =>{
+    const id = req.params.id
     const {name, email, number} = req.body;
     try {
         const existingUser = await users.findOne({
-            where: {uuid}
+            where: {id}
         })
 
         if (!existingUser){
@@ -91,6 +90,28 @@ app.put('/users/:uuid', async(req, res) =>{
     } catch (error) {
         console.log(error)
         return res.status(500).json({message:'Error updating user data'})
+    }
+})
+
+//Create aadhar for user
+
+app.post('/users/:id/aadhar', async(req, res) =>{
+    const id = req.params.id
+    try {
+        const user = await users.findOne({
+            where: {id}
+        })
+        const { name, aadharNumber } = req.body;
+        try {
+            const aadharCreation = await aadhardetails.create({name, aadharNumber})
+            return res.json(aadharCreation)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json(error)
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
     }
 })
 

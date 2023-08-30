@@ -8,11 +8,7 @@ module.exports = {
     await queryInterface.createTable('addresses', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
-      },
-      uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
       },

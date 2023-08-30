@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     name: {
       type:  DataTypes.STRING,
@@ -27,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     aadharNumber: {
       type:  DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      validate:{
+        min:{12:'Number should be 12 digit'},
+        max:{12:'Number should be 12 digit'}
+      }
     },
   }, {
     sequelize,
