@@ -11,13 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate( { aadhardetails } ) {
       // define association here
-      this.hasOne(aadhardetails, { foreignKey: 'aadhar_id' })
+      this.hasOne(aadhardetails, {foreignKey : 'aadhar_id'})
     }
   }
   users.init({
-    uuid:{
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4},
+
+    id:{
+      allowNull: false,
+      primaryKey: true,
+      type:DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+
     name:{
       type:  DataTypes.STRING,
       allowNull: false,
@@ -32,8 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         notNull:{'msg': 'User must have a number'},
         notEmpty:{'msg': 'Number field not be empty'},
-        min:{10:'Number should be 10 digit'},
-        max:{10:'Number should be 10 digit'},
+
       }
     },
     email:{
@@ -47,7 +51,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     aadhar_id:{
       type:  DataTypes.UUID,
-      allowNull: true
     },
   }, {
     sequelize,

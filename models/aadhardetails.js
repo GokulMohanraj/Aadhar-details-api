@@ -11,15 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ users }) {
       // define association here
-      this.belongsTo(users, { foreignKey:'aadhardetails.id' })
+      this.belongsTo(users, {foreignKey : 'aadhar_id'})
     }
   }
   aadhardetails.init({
-    id: {
+    aadhar_id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
     },
     name: {
       type:  DataTypes.STRING,
@@ -28,10 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     aadharNumber: {
       type:  DataTypes.BIGINT,
       allowNull: false,
-      validate:{
-        min:{12:'Number should be 12 digit'},
-        max:{12:'Number should be 12 digit'}
-      }
+      
     },
   }, {
     sequelize,
