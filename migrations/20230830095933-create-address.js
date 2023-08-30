@@ -29,7 +29,7 @@ module.exports = {
         type: DataTypes.STRING
       },
       userid: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.UUID
       },
       createdAt: {

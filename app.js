@@ -1,4 +1,4 @@
-const { sequelize, users, aadhardetails} = require('./models')
+const { sequelize, users, aadhardetails, address} = require('./models')
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -98,22 +98,140 @@ app.put('/users/:id', async(req, res) =>{
 app.post('/users/:id/aadhar', async(req, res) =>{
     const id = req.params.id
     try {
-        const user = await users.findOne({
+          const user =  await users.findOne({
             where: {id}
         })
         const { name, aadharNumber } = req.body;
-        try {
-            const aadharCreation = await aadhardetails.create({name, aadharNumber})
-            return res.json(aadharCreation)
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(error)
-        }
+        const aadharCreation = await aadhardetails.create({name, aadharNumber})
+        user.aadhar_id = aadharCreation.aadhar_id
+        await user.save()
+        return res.json(aadharCreation)
     } catch (error) {
         console.log(error)
         return res.status(500).json({error:'User not found'})
     }
 })
+
+//Get aadhar details for single user
+
+
+app.get('/users/:id/aadhar', async(req, res) =>{
+    const id = req.params.id
+    try {
+        const user = await users.findOne({
+            where: {id}
+        })
+        const aadhar_id = user.aadhar_id
+        const aadhar_details = await aadhardetails.findOne({
+            where: {aadhar_id}
+        })
+        
+        return res.json(aadhar_details)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
+    }
+})
+
+// Create address for user
+
+app.post('/users/:id/addresses', async( req, res ) => {
+    const id = req.params.id
+    try {
+          const user =  await users.findOne({
+            where: {id}
+        })
+        const { name,street,city,country } = req.body;
+        userid = id
+        const addressCreation = await address.create({name, street, city, country, userid})
+        console.log(user.id)
+        await addressCreation.save()
+        return res.json(addressCreation)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
+    }
+})
+
+// Get all addresses for a user
+
+app.get('/users/:id/addresses', async(req, res) => {
+    const id = req.params.id
+    try {
+        await users.findOne({
+            where: {id}
+        })
+        const addresses = await address.findAll({
+            where: {userid: id}
+        })
+        return res.json(addresses)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
+    }
+})
+
+// Get single address for a user
+
+app.get('/users/:id/addresses/:addressId', async(req, res) => {
+    const id = req.params.id
+    const addressId = req.params.addressId
+    try {
+        await users.findOne({
+            where: {id}
+        })
+        const addresses = await address.findOne({
+            where: {id: addressId}
+        })
+        return res.json(addresses)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
+    }
+})
+
+// Update the user address
+
+
+app.put('/users/:id/addresses/:addressId', async(req, res) =>{
+    const id = req.params.id
+    const addressId = req.params.addressId
+    const {name, street, city, country} = req.body;
+    try {
+        await users.findOne({
+            where: {id}
+        })
+        const existingAddress = await address.findOne({
+            where: {id: addressId}
+        })
+
+        if (!existingAddress){
+            return res.status(404).json({message:'User not found'})
+        }
+        if (name){
+            existingAddress.name = name
+        }
+        if (street){
+            existingAddress.street = street
+        }
+        if (city){
+            existingAddress.city = city
+        }
+        if (country){
+            existingAddress.country = country
+        }
+
+        await existingAddress.save();
+        return res.json(existingAddress)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({message:'Error updating user data'})
+    }
+})
+
+
+
+
 
 app.listen(5000, async() =>{
     console.log('server up and running on http://localhost:5000')

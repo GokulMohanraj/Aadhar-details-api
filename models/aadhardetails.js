@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(users, {foreignKey : 'aadhar_id'})
     }
+    toJSON(){
+      return {...this.get(), aadhar_id : undefined} 
+    }
+
   }
   aadhardetails.init({
     aadhar_id: {
