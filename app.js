@@ -246,8 +246,23 @@ app.post('/users/:id/roles', async(req, res) =>{
   }
 })
 
+//Get role of the user
 
-
+app.get('/users/:id/roles', async(req, res) => {
+    const id = req.params.id
+    try {
+        await users.findOne({
+            where: {id}
+        })
+        const role = await roles.findAll({
+            where: {userId : id}
+            })
+        return res.json(role)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:'User not found'})
+    }
+})
 
 app.listen(5000, async() =>{
     console.log('server up and running on http://localhost:5000')
