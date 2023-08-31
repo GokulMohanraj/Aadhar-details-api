@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate(users, userroles, roles) {
       // define association here
+      roles.belongsToMany(users, {through:userroles})
     }
   }
   roles.init({
@@ -20,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    name: {
+    roleName: {
     type:DataTypes.STRING,
     allowNull: false}
   }, {
