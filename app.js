@@ -1,4 +1,4 @@
-const { sequelize, users, aadhardetails, address, roles} = require('./models')
+const { sequelize, users, aadhardetails, address, roles, userroles} = require('./models')
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -234,13 +234,13 @@ app.post('/users/:id/roles', async(req, res) =>{
     const id = req.params.id;
     const{roleName} = req.body;
     try {
-          await users.findOne({
+          const user = await users.findOne({
           where: {id}
       })
       const role = await roles.create({roleName})
-      await role.save()
+      await user.addRole(role)
       return res.json(role)
-  } catch (error) {
+    } catch (error) {
       console.log(error)
       return res.status(500).json({error:'User not found'})
   }
@@ -254,8 +254,8 @@ app.get('/users/:id/roles', async(req, res) => {
         await users.findOne({
             where: {id}
         })
-        const role = await roles.findAll({
-            where: {userId : id}
+        const role = await users.findOne({
+            where: id
             })
         return res.json(role)
     } catch (error) {

@@ -11,30 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
     }
   }
   userRoles.init({
     id: {
       allowNull: false,
+      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      type: DataTypes.INTEGER
     },
-    roleid: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
+    roleId: {
+      type:DataTypes.UUID,
+      allowNull: false
     },
-    userid: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
+    userId: {
+      type:DataTypes.UUID,
+      allowNull: false
     }
   }, {
     sequelize,
     modelName: 'userRoles',
-    tableName: 'userroles'
   });
   return userRoles;
 };
